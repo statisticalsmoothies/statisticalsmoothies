@@ -1,0 +1,90 @@
+.reveal .slide-logo {
+  height: 200px !important;
+  width: 350px!important;
+  max-width: unset !important;
+  max-height: unset !important;
+}
+
+.test {
+  font-size: 12;
+}
+
+.pp {
+  font-size: 24px;
+  color: #2A4747;
+  
+}
+
+.ppp {
+  font-size: 16px;
+  color: #2A4747;
+  
+}
+
+.p {
+  font-size: 24px;
+  
+}
+
+.l {
+  font-size: 50px !important;
+  text-align: center;
+}
+
+
+.test h2 {
+  font-size: 40px !important;
+  color: royalblue;
+}
+
+.title {
+  font-size: 70px !important;
+  color: royalblue !important;
+}
+
+.quarto-title-author-name {
+  font-size: 40px !important;
+  color: black !important;
+}
+
+.reveal table {
+  font-size: 16px !important;
+}
+
+ figcaption {
+  font-size: 8px !important;
+  color: black !important;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  width: 80%; 
+  height: 300px
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* Style table header cells */
+th {
+  background-color: #f2f2f2;
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Style table data cells */
+td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+}
+
+/* Alternate row background color */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
