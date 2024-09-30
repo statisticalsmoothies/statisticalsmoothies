@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Giacomo Biganzoli">
+
+<title>Statistica Applicata alla Ricerca Biomedica - R - Studi osservazionali e misure di associazione</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Statistica Applicata alla Ricerca Biomedica - R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../Stat descrittiva.qmd" rel="" target="">
+ <span class="menu-text">Statistica descrittiva</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduzione-agli-studi-osservazionali" id="toc-introduzione-agli-studi-osservazionali" class="nav-link active" data-scroll-target="#introduzione-agli-studi-osservazionali"><strong>Introduzione agli Studi Osservazionali</strong></a>
+  <ul class="collapse">
+  <li><a href="#cosè-uno-studio-osservazionale" id="toc-cosè-uno-studio-osservazionale" class="nav-link" data-scroll-target="#cosè-uno-studio-osservazionale"><strong>1. Cos’è uno studio osservazionale?</strong></a></li>
+  <li><a href="#tipologie-di-studi-osservazionali" id="toc-tipologie-di-studi-osservazionali" class="nav-link" data-scroll-target="#tipologie-di-studi-osservazionali"><strong>2. Tipologie di studi osservazionali</strong></a></li>
+  <li><a href="#vantaggi-e-limiti-degli-studi-osservazionali" id="toc-vantaggi-e-limiti-degli-studi-osservazionali" class="nav-link" data-scroll-target="#vantaggi-e-limiti-degli-studi-osservazionali"><strong>3. Vantaggi e Limiti degli Studi Osservazionali</strong></a></li>
+  <li><a href="#conclusione" id="toc-conclusione" class="nav-link" data-scroll-target="#conclusione"><strong>4. Conclusione</strong></a></li>
+  </ul></li>
+  <li><a href="#misure-di-associazione-e-loro-interpretazione" id="toc-misure-di-associazione-e-loro-interpretazione" class="nav-link" data-scroll-target="#misure-di-associazione-e-loro-interpretazione"><strong>Misure di Associazione e loro Interpretazione</strong></a>
+  <ul class="collapse">
+  <li><a href="#risk-ratio-rapporto-di-rischio-o-rr" id="toc-risk-ratio-rapporto-di-rischio-o-rr" class="nav-link" data-scroll-target="#risk-ratio-rapporto-di-rischio-o-rr"><strong>1. Risk Ratio (Rapporto di Rischio o RR)</strong></a></li>
+  <li><a href="#odds-ratio-or" id="toc-odds-ratio-or" class="nav-link" data-scroll-target="#odds-ratio-or"><strong>2. Odds Ratio (OR)</strong></a></li>
+  <li><a href="#prevalence-ratio-pr" id="toc-prevalence-ratio-pr" class="nav-link" data-scroll-target="#prevalence-ratio-pr"><strong>3. Prevalence Ratio (PR)</strong></a></li>
+  <li><a href="#differenze-tra-risk-ratio-odds-ratio-e-prevalence-ratio" id="toc-differenze-tra-risk-ratio-odds-ratio-e-prevalence-ratio" class="nav-link" data-scroll-target="#differenze-tra-risk-ratio-odds-ratio-e-prevalence-ratio"><strong>4. Differenze tra Risk Ratio, Odds Ratio e Prevalence Ratio</strong></a></li>
+  <li><a href="#bonus-rapporti-fra-tassi" id="toc-bonus-rapporti-fra-tassi" class="nav-link" data-scroll-target="#bonus-rapporti-fra-tassi">BONUS: Rapporti fra tassi</a></li>
+  <li><a href="#tabelle-di-contingenza" id="toc-tabelle-di-contingenza" class="nav-link" data-scroll-target="#tabelle-di-contingenza"><strong>5. Tabelle di contingenza</strong></a></li>
+  </ul></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#curva-roc-e-auc-valutare-lassociazione-tra-una-variabile-continua-e-una-condizione-binaria" id="toc-curva-roc-e-auc-valutare-lassociazione-tra-una-variabile-continua-e-una-condizione-binaria" class="nav-link" data-scroll-target="#curva-roc-e-auc-valutare-lassociazione-tra-una-variabile-continua-e-una-condizione-binaria"><strong>Curva ROC e AUC: Valutare l’Associazione tra una Variabile Continua e una Condizione Binaria</strong></a>
+  <ul class="collapse">
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link" data-scroll-target="#introduzione"><strong>1. Introduzione</strong></a></li>
+  <li><a href="#il-problema-della-classificazione-basata-su-una-variabile-continua" id="toc-il-problema-della-classificazione-basata-su-una-variabile-continua" class="nav-link" data-scroll-target="#il-problema-della-classificazione-basata-su-una-variabile-continua"><strong>2. Il Problema della Classificazione Basata su una Variabile Continua</strong></a></li>
+  <li><a href="#concetto-della-curva-roc-per-variabili-continue" id="toc-concetto-della-curva-roc-per-variabili-continue" class="nav-link" data-scroll-target="#concetto-della-curva-roc-per-variabili-continue"><strong>3. Concetto della Curva ROC per Variabili Continue</strong></a></li>
+  <li><a href="#calcolo-della-curva-roc" id="toc-calcolo-della-curva-roc" class="nav-link" data-scroll-target="#calcolo-della-curva-roc"><strong>4. Calcolo della Curva ROC</strong></a></li>
+  <li><a href="#interpretazione-della-curva-roc-per-variabili-continue" id="toc-interpretazione-della-curva-roc-per-variabili-continue" class="nav-link" data-scroll-target="#interpretazione-della-curva-roc-per-variabili-continue"><strong>5. Interpretazione della Curva ROC per Variabili Continue</strong></a></li>
+  <li><a href="#area-sotto-la-curva-auc" id="toc-area-sotto-la-curva-auc" class="nav-link" data-scroll-target="#area-sotto-la-curva-auc"><strong>6. Area Sotto la Curva (AUC)</strong></a></li>
+  <li><a href="#esempio-pratico-colesterolo-e-malattie-cardiovascolari" id="toc-esempio-pratico-colesterolo-e-malattie-cardiovascolari" class="nav-link" data-scroll-target="#esempio-pratico-colesterolo-e-malattie-cardiovascolari"><strong>7. Esempio Pratico: Colesterolo e Malattie Cardiovascolari</strong></a></li>
+  <li><a href="#vantaggi-delluso-della-curva-roc-per-variabili-continue" id="toc-vantaggi-delluso-della-curva-roc-per-variabili-continue" class="nav-link" data-scroll-target="#vantaggi-delluso-della-curva-roc-per-variabili-continue"><strong>8. Vantaggi dell’Uso della Curva ROC per Variabili Continue</strong></a></li>
+  <li><a href="#limiti-della-curva-roc-per-variabili-continue" id="toc-limiti-della-curva-roc-per-variabili-continue" class="nav-link" data-scroll-target="#limiti-della-curva-roc-per-variabili-continue"><strong>9. Limiti della Curva ROC per Variabili Continue</strong></a></li>
+  <li><a href="#conclusione-1" id="toc-conclusione-1" class="nav-link" data-scroll-target="#conclusione-1"><strong>10. Conclusione</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Studi osservazionali e misure di associazione</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Giacomo Biganzoli </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="introduzione-agli-studi-osservazionali" class="level2">
+<h2 class="anchored" data-anchor-id="introduzione-agli-studi-osservazionali"><strong>Introduzione agli Studi Osservazionali</strong></h2>
+<section id="cosè-uno-studio-osservazionale" class="level3">
+<h3 class="anchored" data-anchor-id="cosè-uno-studio-osservazionale"><strong>1. Cos’è uno studio osservazionale?</strong></h3>
+<p>Uno&nbsp;<strong>studio osservazionale</strong>&nbsp;è un tipo di ricerca in cui il ricercatore osserva e registra eventi o comportamenti senza intervenire direttamente. A differenza degli&nbsp;<strong>studi sperimentali</strong>, dove il ricercatore manipola una variabile (ad esempio somministrando un farmaco o un trattamento), negli studi osservazionali non c’è alcun intervento attivo. Il ricercatore si limita a monitorare l’andamento naturale degli eventi.</p>
+<p>Gli studi osservazionali sono particolarmente utili quando sarebbe&nbsp;<strong>non etico</strong>&nbsp;o&nbsp;<strong>impraticabile</strong>&nbsp;condurre uno studio sperimentale. Ad esempio, non possiamo chiedere a delle persone di iniziare a fumare per vedere se sviluppano il cancro ai polmoni; tuttavia, possiamo osservare i fumatori e i non fumatori e studiare il rischio di sviluppare la malattia nel corso del tempo.</p>
+</section>
+<section id="tipologie-di-studi-osservazionali" class="level3">
+<h3 class="anchored" data-anchor-id="tipologie-di-studi-osservazionali"><strong>2. Tipologie di studi osservazionali</strong></h3>
+<p>Esistono tre principali tipi di studi osservazionali, ciascuno con caratteristiche specifiche:</p>
+<section id="studi-di-coorte" class="level4">
+<h4 class="anchored" data-anchor-id="studi-di-coorte"><strong>2.1. Studi di coorte</strong></h4>
+<p>Negli studi di&nbsp;<strong>coorte</strong>, un gruppo di individui (la coorte) viene seguito nel tempo per osservare chi sviluppa una determinata condizione o malattia. Questi individui vengono suddivisi in base alla loro esposizione a un determinato fattore di rischio (ad esempio il fumo), e poi vengono osservati per vedere chi sviluppa l’outcome di interesse (ad esempio il cancro).</p>
+<ul>
+<li><strong>Esempio</strong>: Si può seguire un gruppo di 1.000 fumatori e non fumatori per 10 anni per determinare chi sviluppa il cancro ai polmoni.</li>
+</ul>
+<p><a href="https://www.nejm.org/doi/10.1056/NEJMoa010492?url_ver=Z39.88-2003&amp;rfr_id=ori:rid:crossref.org&amp;rfr_dat=cr_pub%20%200www.ncbi.nlm.nih.gov">Un altro esempio famoso</a></p>
+<p>Gli studi di coorte possono essere:</p>
+<ul>
+<li><p><strong>Prospettici</strong>: i partecipanti vengono seguiti nel futuro, dal momento dell’inizio dello studio in avanti.</p></li>
+<li><p><strong>Retrospettivi</strong>: si utilizzano dati già raccolti in passato, andando a esaminare ciò che è accaduto nel tempo ai partecipanti.</p></li>
+</ul>
+<p><strong>Vantaggi</strong>:</p>
+<ul>
+<li><p>Possono fornire stime dirette del rischio di malattia associato all’esposizione.</p></li>
+<li><p>Permettono di studiare molteplici outcome per una singola esposizione.</p></li>
+</ul>
+<p><strong>Limiti</strong>:</p>
+<ul>
+<li><p>Sono costosi e richiedono molto tempo, soprattutto per malattie che si sviluppano lentamente.</p></li>
+<li><p>Possono soffrire di&nbsp;<strong>perdita di partecipanti</strong>&nbsp;(attrition) durante il follow-up.</p></li>
+</ul>
+</section>
+<section id="studi-caso-controllo" class="level4">
+<h4 class="anchored" data-anchor-id="studi-caso-controllo"><strong>2.2. Studi caso-controllo</strong></h4>
+<p>Negli studi&nbsp;<strong>caso-controllo</strong>, si confrontano individui che hanno già sviluppato una malattia (i&nbsp;<strong>casi</strong>) con individui che non hanno la malattia (i&nbsp;<strong>controlli</strong>), per verificare se vi siano differenze nelle esposizioni passate a determinati fattori di rischio.</p>
+<ul>
+<li><strong>Esempio</strong>: Si può confrontare un gruppo di persone con infarto (casi) e un gruppo di persone senza infarto (controlli), per verificare se esiste una differenza nell’esposizione a una dieta ricca di grassi tra i due gruppi.</li>
+</ul>
+<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2038856/pdf/brmedj03566-0003.pdf">Un altro esempio famoso</a></p>
+<p><strong>Vantaggi</strong>:</p>
+<ul>
+<li><p>Ideali per studiare malattie rare o con lunghi periodi di latenza.</p></li>
+<li><p>Più veloci ed economici rispetto agli studi di coorte.</p></li>
+</ul>
+<p><strong>Limiti</strong>:</p>
+<ul>
+<li><p>Rischio di&nbsp;<strong>bias di richiamo</strong>: i casi potrebbero ricordare meglio le esposizioni passate rispetto ai controlli.</p></li>
+<li><p>Non permettono di calcolare il rischio assoluto, ma solo la&nbsp;<strong>odds ratio</strong>&nbsp;(rapporto di probabilità).</p></li>
+</ul>
+</section>
+<section id="studi-trasversali-cross-sectional" class="level4">
+<h4 class="anchored" data-anchor-id="studi-trasversali-cross-sectional"><strong>2.3. Studi trasversali (cross-sectional)</strong></h4>
+<p>Gli studi&nbsp;<strong>trasversali</strong>&nbsp;misurano contemporaneamente l’esposizione e l’outcome in un determinato momento, fornendo una “fotografia” della popolazione in quel preciso istante. Questi studi sono particolarmente utili per stimare la&nbsp;<strong>prevalenza</strong>&nbsp;di una condizione in una popolazione.</p>
+<ul>
+<li><strong>Esempio</strong>: Si può condurre uno studio trasversale per valutare la prevalenza dell’obesità tra adulti che praticano attività fisica rispetto a coloro che non lo fanno.</li>
+</ul>
+<p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(07)61415-9/abstract">Un altro esempio famoso</a></p>
+<p><strong>Vantaggi</strong>:</p>
+<ul>
+<li><p>Sono rapidi e relativamente poco costosi.</p></li>
+<li><p>Utili per descrivere la distribuzione delle malattie in una popolazione.</p></li>
+</ul>
+<p><strong>Limiti</strong>:</p>
+<ul>
+<li><p>Non possono stabilire relazioni causali poiché esposizione e outcome sono misurati contemporaneamente.</p></li>
+<li><p>Non permettono di determinare se l’esposizione precede o segue l’outcome.</p></li>
+</ul>
+</section>
+</section>
+<section id="vantaggi-e-limiti-degli-studi-osservazionali" class="level3">
+<h3 class="anchored" data-anchor-id="vantaggi-e-limiti-degli-studi-osservazionali"><strong>3. Vantaggi e Limiti degli Studi Osservazionali</strong></h3>
+<p>Gli studi osservazionali sono essenziali nella ricerca epidemiologica e nella medicina, soprattutto quando esperimenti controllati non sono fattibili o etici. Tuttavia, presentano una serie di limiti che è importante comprendere.</p>
+<p><strong>Vantaggi</strong>:</p>
+<ul>
+<li><p><strong>Eticamente accettabili</strong>: Permettono di studiare situazioni in cui non sarebbe etico intervenire (es. esposizioni dannose come il fumo o l’inquinamento).</p></li>
+<li><p><strong>Fattibili</strong>: Sono generalmente più facili da condurre rispetto agli studi sperimentali, richiedono meno risorse e spesso utilizzano dati già disponibili.</p></li>
+<li><p><strong>Generano ipotesi</strong>: Forniscono indicazioni preliminari su relazioni tra fattori di rischio e malattie che possono essere successivamente testate in studi sperimentali.</p></li>
+</ul>
+<p><strong>Limiti</strong>:</p>
+<ul>
+<li><p><strong>Causalità incerta</strong>: Non possono stabilire con certezza un nesso causale tra esposizione e outcome. Ad esempio, se uno studio trasversale mostra che le persone che guardano molta televisione sono più obese, non possiamo dire se la televisione causi l’obesità o se le persone obese tendano a guardare più televisione.</p></li>
+<li><p><strong>Confondenti</strong>: Spesso è difficile controllare per tutti i fattori confondenti, cioè variabili che potrebbero influenzare sia l’esposizione che l’outcome. Ad esempio, l’età, il sesso o il reddito possono influenzare sia il rischio di malattia che l’esposizione a determinati fattori di rischio.</p></li>
+<li><p><strong>Bias</strong>: Gli studi osservazionali sono particolarmente vulnerabili a diversi tipi di bias (distorsioni), come il bias di selezione (se i partecipanti selezionati non sono rappresentativi della popolazione) e il bias di richiamo (se i partecipanti non ricordano accuratamente le esposizioni passate).</p></li>
+</ul>
+</section>
+<section id="conclusione" class="level3">
+<h3 class="anchored" data-anchor-id="conclusione"><strong>4. Conclusione</strong></h3>
+<p>Gli studi osservazionali sono uno strumento fondamentale nella ricerca medica e sociale. Offrono importanti indicazioni sulle associazioni tra fattori di rischio ed esiti di salute, permettendo ai ricercatori di generare ipotesi e di identificare tendenze nella popolazione. Tuttavia, a causa della loro natura non sperimentale, è essenziale interpretare i risultati con cautela, tenendo sempre presente la possibilità di confondenti e bias.</p>
+<hr>
+</section>
+</section>
+<section id="misure-di-associazione-e-loro-interpretazione" class="level2">
+<h2 class="anchored" data-anchor-id="misure-di-associazione-e-loro-interpretazione"><strong>Misure di Associazione e loro Interpretazione</strong></h2>
+<p>Quando conduciamo uno studio epidemiologico per esplorare la relazione tra un’esposizione (ad esempio il fumo) e un outcome di salute (ad esempio il cancro ai polmoni), è fondamentale quantificare l’associazione tra i due. Le&nbsp;<strong>misure di associazione</strong>&nbsp;ci permettono di comprendere se e quanto un’esposizione aumenta o riduce la probabilità di un determinato esito.</p>
+<section id="risk-ratio-rapporto-di-rischio-o-rr" class="level3">
+<h3 class="anchored" data-anchor-id="risk-ratio-rapporto-di-rischio-o-rr"><strong>1. Risk Ratio (Rapporto di Rischio o RR)</strong></h3>
+<p>Il&nbsp;<strong>Risk Ratio</strong>&nbsp;(RR), o&nbsp;<strong>rapporto di rischio</strong>, è una misura di associazione comunemente utilizzata negli studi di&nbsp;<strong>coorte</strong>. Esprime il rapporto tra il rischio di sviluppare una malattia (o un outcome) nei soggetti esposti a un fattore di rischio e il rischio nei soggetti non esposti.</p>
+<section id="formula" class="level4">
+<h4 class="anchored" data-anchor-id="formula"><strong>Formula:</strong></h4>
+<p><span class="math display">\[RR = \frac{Rischio \ nei\ soggetti \ esposti}{Rischio \ nei \ soggetti \ non \ esposti}\]</span>​</p>
+<ul>
+<li><strong>Rischio</strong>: La probabilità che un individuo sviluppi l’outcome (ad esempio una malattia) durante un certo periodo di tempo. Si calcola come:​</li>
+</ul>
+<p><span class="math display">\[Rischio = \frac{Numero \ di \ individui \ che \ sviluppano \ malattia}{Numero \ totale \ di \ individui \ esposti}\]</span></p>
+</section>
+<section id="interpretazione" class="level4">
+<h4 class="anchored" data-anchor-id="interpretazione"><strong>Interpretazione</strong>:</h4>
+<ul>
+<li><p><strong>RR = 1</strong>: L’esposizione non modifica il rischio rispetto ai non esposti.</p></li>
+<li><p><strong>RR &gt; 1</strong>: L’esposizione aumenta il rischio di sviluppare la malattia (es. RR = 2 significa che gli esposti hanno il doppio del rischio di sviluppare la malattia rispetto ai non esposti).</p></li>
+<li><p><strong>RR &lt; 1</strong>: L’esposizione riduce il rischio di sviluppare la malattia (es. RR = 0.5 indica che gli esposti hanno la metà del rischio di ammalarsi rispetto ai non esposti).</p></li>
+</ul>
+</section>
+<section id="esempio" class="level4">
+<h4 class="anchored" data-anchor-id="esempio"><strong>Esempio</strong>:</h4>
+<p>In uno studio di coorte sui fumatori e il cancro ai polmoni, se 10 su 100 fumatori sviluppano il cancro e solo 2 su 100 non fumatori lo sviluppano:</p>
+<p><span class="math display">\[
+RR = \frac{10/100}{2/100} = 5
+\]</span></p>
+<p>Questo significa che i fumatori hanno un rischio 5 volte maggiore di sviluppare il cancro ai polmoni rispetto ai non fumatori.</p>
+</section>
+</section>
+<section id="odds-ratio-or" class="level3">
+<h3 class="anchored" data-anchor-id="odds-ratio-or"><strong>2. Odds Ratio (OR)</strong></h3>
+<p>L’<strong>Odds Ratio</strong>&nbsp;(OR), o&nbsp;<strong>rapporto di probabilità</strong>, è la misura più comune negli studi&nbsp;<strong>caso-controllo</strong>, ma può essere utilizzata anche in studi di coorte. Esprime il rapporto tra le&nbsp;<strong>odds</strong>&nbsp;(probabilità) di esposizione tra i casi (quelli che hanno sviluppato l’outcome) rispetto ai controlli (quelli che non lo hanno sviluppato).</p>
+<section id="formula-1" class="level4">
+<h4 class="anchored" data-anchor-id="formula-1"><strong>Formula:</strong></h4>
+<p><span class="math display">\[OR = \frac{odds \ di \ esposizione \ nei \ casi }{odds \ di \ esposizione \ nei \ controlli}\]</span>​</p>
+<ul>
+<li><strong>Odds</strong>: La probabilità che un evento si verifichi rispetto alla probabilità che non si verifichi. Si calcola come:</li>
+</ul>
+<p><span class="math display">\[Odds = \frac{Numero \  di \ eventi}{Numero \  di  \ non  \ eventi}\]</span>​</p>
+</section>
+<section id="interpretazione-1" class="level4">
+<h4 class="anchored" data-anchor-id="interpretazione-1"><strong>Interpretazione</strong>:</h4>
+<ul>
+<li><p><strong>OR = 1</strong>: Nessuna associazione tra esposizione e outcome.</p></li>
+<li><p><strong>OR &gt; 1</strong>: L’esposizione è associata a un aumento delle probabilità di sviluppare l’outcome.</p></li>
+<li><p><strong>OR &lt; 1</strong>: L’esposizione è associata a una riduzione delle probabilità di sviluppare l’outcome.</p></li>
+</ul>
+</section>
+<section id="esempio-1" class="level4">
+<h4 class="anchored" data-anchor-id="esempio-1"><strong>Esempio</strong>:</h4>
+<p>In uno studio caso-controllo che esamina la relazione tra dieta ricca di grassi e infarto, supponiamo che 30 casi su 50 abbiano avuto una dieta ricca di grassi, mentre tra i controlli solo 10 su 50 lo abbiano fatto:</p>
+<p><span class="math display">\[
+OR = \frac{30/20}{10/40} = \frac{1.5}{0.25} = 6
+\]</span></p>
+<p>Questo significa che coloro che hanno una dieta ricca di grassi hanno 6 volte più probabilità di avere un infarto rispetto a quelli con una dieta a basso contenuto di grassi.</p>
+</section>
+</section>
+<section id="prevalence-ratio-pr" class="level3">
+<h3 class="anchored" data-anchor-id="prevalence-ratio-pr"><strong>3. Prevalence Ratio (PR)</strong></h3>
+<p>Il&nbsp;<strong>Prevalence Ratio</strong>&nbsp;(PR) è utilizzato negli studi&nbsp;<strong>trasversali (cross-sectional)</strong>&nbsp;per confrontare la&nbsp;<strong>prevalenza</strong>&nbsp;di un outcome tra individui esposti e non esposti a un determinato fattore di rischio. Misura il rapporto tra la prevalenza della malattia negli esposti rispetto ai non esposti.</p>
+<section id="formula-2" class="level4">
+<h4 class="anchored" data-anchor-id="formula-2"><strong>Formula:</strong></h4>
+<p><span class="math display">\[
+PR = \frac{Prevalenza \ negli \ esposti}{Prevalenza \  nei \  non \ esposti}
+\]</span></p>
+<ul>
+<li><strong>Prevalenza</strong>: La proporzione di individui con una condizione o malattia in un determinato momento. Si calcola come:</li>
+</ul>
+<p><span class="math display">\[
+Prevalenza = \frac{Numero \ di \ casi \ di \ malattia}{Numero \ totale \ di \ individui \ nella \ popolazione}
+\]</span>​</p>
+</section>
+<section id="interpretazione-2" class="level4">
+<h4 class="anchored" data-anchor-id="interpretazione-2"><strong>Interpretazione</strong>:</h4>
+<ul>
+<li><p><strong>PR = 1</strong>: Nessuna differenza nella prevalenza dell’outcome tra esposti e non esposti.</p></li>
+<li><p><strong>PR &gt; 1</strong>: La prevalenza dell’outcome è maggiore tra gli esposti.</p></li>
+<li><p><strong>PR &lt; 1</strong>: La prevalenza dell’outcome è minore tra gli esposti.</p></li>
+</ul>
+</section>
+<section id="esempio-2" class="level4">
+<h4 class="anchored" data-anchor-id="esempio-2"><strong>Esempio</strong>:</h4>
+<p>In uno studio trasversale sulla prevalenza dell’asma tra persone esposte e non esposte a inquinamento, se la prevalenza di asma è del 15% tra gli esposti e del 5% tra i non esposti:</p>
+<p><span class="math display">\[
+PR = \frac{0.15}{0.05}= 3
+\]</span></p>
+<p>Questo significa che la prevalenza dell’asma è 3 volte maggiore tra coloro che sono esposti all’inquinamento rispetto a coloro che non lo sono.</p>
+</section>
+</section>
+<section id="differenze-tra-risk-ratio-odds-ratio-e-prevalence-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="differenze-tra-risk-ratio-odds-ratio-e-prevalence-ratio"><strong>4. Differenze tra Risk Ratio, Odds Ratio e Prevalence Ratio</strong></h3>
+<ul>
+<li><p>Il&nbsp;<strong>Risk Ratio</strong>&nbsp;è utilizzato principalmente negli studi di coorte, dove seguiamo i partecipanti nel tempo e possiamo calcolare il&nbsp;<strong>rischio</strong>&nbsp;di sviluppare una malattia.</p></li>
+<li><p>L’<strong>Odds Ratio</strong>&nbsp;è comune negli studi caso-controllo, dove non possiamo calcolare il rischio perché la malattia è già presente al momento della raccolta dei dati, quindi usiamo le&nbsp;<strong>odds</strong>&nbsp;(probabilità) di esposizione.</p></li>
+<li><p>Il&nbsp;<strong>Prevalence Ratio</strong>&nbsp;è specifico degli studi trasversali, dove valutiamo la&nbsp;<strong>prevalenza</strong>&nbsp;di una condizione in un dato momento, ma non possiamo calcolare il rischio futuro.</p></li>
+</ul>
+</section>
+<section id="bonus-rapporti-fra-tassi" class="level3">
+<h3 class="anchored" data-anchor-id="bonus-rapporti-fra-tassi">BONUS: Rapporti fra tassi</h3>
+<p>Il&nbsp;<strong>rate ratio</strong>&nbsp;(RR) è utilizzato negli studi&nbsp;longitudinali&nbsp;per confrontare il tasso&nbsp;di un outcome tra individui esposti e non esposti a un determinato fattore di rischio. Misura il rapporto tra tassi di insorgenza della malattia nel tempo negli esposti rispetto ai non esposti.</p>
+<section id="formula-3" class="level4">
+<h4 class="anchored" data-anchor-id="formula-3"><strong>Formula:</strong></h4>
+<p><span class="math display">\[
+RR = \frac{Tasso \ di \ malattia \ negli \ esposti}{Tasso \ di \ malattia \  nei \  non \ esposti}
+\]</span></p>
+<ul>
+<li><strong>Tasso di incidenza</strong>: Numero di nuovi eventi da t a t + <span class="math inline">\(\Delta t\)</span> sul totale della massa a rischio in <span class="math inline">\(\Delta\)</span>. Si calcola come:</li>
+</ul>
+<p>La 𝑠𝑜𝑚𝑚𝑎 𝑑𝑒𝑖 𝑡𝑒𝑚𝑝𝑖 𝑑𝑖 𝑒𝑠𝑝𝑜𝑠𝑖𝑧𝑖𝑜𝑛𝑒 𝑎𝑙 𝑟𝑖𝑠𝑐ℎ𝑖𝑜 è denominata «massa a rischio». I tempi da includere nella somma sono: Per i soggetti che si ammalano il tempo che intercorre tra l’inizio dell’osservazione e il tempo in cui è osservata per la prima volta la malattia (t a t + <span class="math inline">\(\Delta t\)</span> ). Per i soggetti che sono osservati per tutto il periodo da t a t + <span class="math inline">\(\Delta t\)</span> e che non si sono ammalati il tempo è dato da tutto il periodo (<span class="math inline">\(\Delta\)</span>) Per i soggetti che non si ammalano ma che sono usciti dall’osservazione per un tempo &lt; <span class="math inline">\(\Delta\)</span> (persi al follow-up) il tempo da t fino all’ultima osservazione. Questo permette di tenere conto in modo corretto dei soggetti con informazione incompleta. L’unità di misura è persone/tempo​.</p>
+<p><img src="Senza titolo.png" class="img-fluid"></p>
+</section>
+<section id="interpretazione-3" class="level4">
+<h4 class="anchored" data-anchor-id="interpretazione-3"><strong>Interpretazione</strong>:</h4>
+<ul>
+<li><p><strong>RR = 1</strong>: Nessuna differenza nella tasso di incidenza dell’outcome tra esposti e non esposti.</p></li>
+<li><p><strong>RR &gt; 1</strong>: Il tasso di incidenza dell’outcome è maggiore tra gli esposti.</p></li>
+<li><p><strong>RR &lt; 1</strong>: Il tasso di incidenza dell’outcome è minore tra gli esposti</p></li>
+</ul>
+</section>
+</section>
+<section id="tabelle-di-contingenza" class="level3">
+<h3 class="anchored" data-anchor-id="tabelle-di-contingenza"><strong>5. Tabelle di contingenza</strong></h3>
+<p>Studio caso-controllo</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> .<span class="dv">6</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">outcome =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">30</span>), <span class="at">exposure =</span> <span class="fu">rbinom</span>(<span class="dv">30</span>, <span class="dv">1</span>, r) ),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">outcome =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">60</span>), <span class="at">exposure =</span> <span class="fu">rbinom</span>(<span class="dv">60</span>, <span class="dv">1</span>, r<span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">toString</span>(sim<span class="sc">$</span>outcome)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toString</span>(sim<span class="sc">$</span>exposure)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tab<span class="ot">&lt;-</span> <span class="fu">addmargins</span>(<span class="fu">table</span>(<span class="at">ESPOSIZIONE =</span>  sim<span class="sc">$</span>exposure, <span class="at">OUTCOME =</span> sim<span class="sc">$</span>outcome))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           OUTCOME
+ESPOSIZIONE  0  1 Sum
+        0   42 14  56
+        1   18 16  34
+        Sum 60 30  90</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>OR <span class="ot">=</span> (tab[<span class="dv">2</span>,<span class="dv">2</span>]<span class="sc">/</span>tab[<span class="dv">1</span>,<span class="dv">2</span>])<span class="sc">/</span>(tab[<span class="dv">2</span>,<span class="dv">1</span>]<span class="sc">/</span>tab[<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>OR</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.666667</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tab<span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">ESPOSIZIONE =</span>  sim<span class="sc">$</span>exposure, <span class="at">OUTCOME =</span> sim<span class="sc">$</span>outcome)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ptab <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(tab, <span class="at">margin =</span> <span class="dv">2</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>ptab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           OUTCOME
+ESPOSIZIONE         0         1
+          0 0.7000000 0.4666667
+          1 0.3000000 0.5333333</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>OR <span class="ot">=</span> (ptab[<span class="dv">2</span>,<span class="dv">2</span>]<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>ptab[<span class="dv">2</span>,<span class="dv">2</span>]))<span class="sc">/</span>(ptab[<span class="dv">2</span>,<span class="dv">1</span>]<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>ptab[<span class="dv">2</span>,<span class="dv">1</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+</section>
+<section id="curva-roc-e-auc-valutare-lassociazione-tra-una-variabile-continua-e-una-condizione-binaria" class="level2">
+<h2 class="anchored" data-anchor-id="curva-roc-e-auc-valutare-lassociazione-tra-una-variabile-continua-e-una-condizione-binaria"><strong>Curva ROC e AUC: Valutare l’Associazione tra una Variabile Continua e una Condizione Binaria</strong></h2>
+<section id="introduzione" class="level3">
+<h3 class="anchored" data-anchor-id="introduzione"><strong>1. Introduzione</strong></h3>
+<p>Quando abbiamo una variabile numerica continua (ad esempio, livelli di colesterolo nel sangue) e vogliamo capire come questa variabile si associ a una condizione binaria (ad esempio, malato vs non malato), possiamo usare la&nbsp;<strong>curva ROC</strong>&nbsp;e l’<strong>Area Sotto la Curva (AUC)</strong>&nbsp;per misurare il potere discriminante della variabile continua. Questo ci permette di valutare quanto bene la variabile predice l’appartenenza a una delle due categorie.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>malati <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>,<span class="dv">120</span>,<span class="dv">20</span> )</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sani <span class="ot">&lt;-</span>  <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="dv">80</span>, <span class="dv">20</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">col =</span> <span class="fu">c</span>(malati, sani), <span class="at">ty =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">'malati'</span>, <span class="st">'sani'</span>), <span class="at">each =</span> <span class="dv">10000</span>)) <span class="ot">-&gt;</span> cc</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cc, <span class="fu">aes</span>(col, <span class="at">fill =</span> ty))<span class="sc">+</span><span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">5</span>)<span class="sc">+</span>ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()<span class="sc">+</span><span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">''</span>, <span class="at">x =</span> <span class="st">'Colesterolo LDL (mg/dL)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="il-problema-della-classificazione-basata-su-una-variabile-continua" class="level3">
+<h3 class="anchored" data-anchor-id="il-problema-della-classificazione-basata-su-una-variabile-continua"><strong>2. Il Problema della Classificazione Basata su una Variabile Continua</strong></h3>
+<p>Supponiamo di avere una variabile continua come il livello di&nbsp;<strong>colesterolo</strong>&nbsp;e di voler capire quanto sia utile questo indicatore per predire la presenza di&nbsp;<strong>malattie cardiovascolari</strong>&nbsp;(CVD) in un gruppo di pazienti. I pazienti sono classificati come “malati” o “non malati” in base alla presenza o assenza di CVD.</p>
+<p>L’obiettivo è determinare se possiamo usare il livello di colesterolo per distinguere in modo efficace chi svilupperà malattie cardiovascolari e chi no. La curva ROC e l’AUC sono strumenti fondamentali per questo scopo.</p>
+</section>
+<section id="concetto-della-curva-roc-per-variabili-continue" class="level3">
+<h3 class="anchored" data-anchor-id="concetto-della-curva-roc-per-variabili-continue"><strong>3. Concetto della Curva ROC per Variabili Continue</strong></h3>
+<p>La&nbsp;<strong>curva ROC</strong>&nbsp;viene utilizzata per valutare un classificatore, ma in questo caso la variabile continua (ad esempio, il livello di colesterolo) viene trattata come un predittore che può assumere valori diversi. In pratica, impostiamo diverse soglie lungo la variabile continua e a ogni soglia decidiamo se classificare un individuo come “malato” o “non malato”. Per ciascuna soglia:</p>
+<ul>
+<li><p>Se il valore del colesterolo è sopra la soglia, classifichiamo il paziente come “malato”.</p></li>
+<li><p>Se il valore è sotto la soglia, il paziente viene classificato come “non malato”.</p></li>
+</ul>
+<p>Modificando la soglia, otteniamo una serie di coppie di valori di&nbsp;<strong>True Positive Rate (TPR)</strong>&nbsp;e&nbsp;<strong>False Positive Rate (FPR)</strong>che tracciamo sulla curva ROC.</p>
+</section>
+<section id="calcolo-della-curva-roc" class="level3">
+<h3 class="anchored" data-anchor-id="calcolo-della-curva-roc"><strong>4. Calcolo della Curva ROC</strong></h3>
+<ol type="1">
+<li><p><strong>Modello senza soglia fissa</strong>: La variabile continua, come il colesterolo, non ha un valore netto che separa perfettamente i “malati” dai “non malati”. A ogni livello di colesterolo possiamo determinare una soglia diversa per decidere chi è malato.</p></li>
+<li><p><strong>TPR e FPR</strong>: Per ciascuna soglia di colesterolo:</p>
+<ul>
+<li><p>Il&nbsp;<strong>True Positive Rate (TPR)</strong>&nbsp;(o sensibilità) è la proporzione di individui malati correttamente identificati come tali.</p></li>
+<li><p>Il&nbsp;<strong>False Positive Rate (FPR)</strong>&nbsp;è la proporzione di individui non malati erroneamente classificati come malati.</p></li>
+</ul></li>
+<li><p><strong>Costruzione della curva ROC</strong>: Variando la soglia lungo l’intervallo di valori di colesterolo, possiamo tracciare la curva ROC, che rappresenta il compromesso tra TPR e FPR a diverse soglie.</p></li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">80</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">70</span>,<span class="dv">200</span>, <span class="dv">1</span>), <span class="cf">function</span>(t){</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  TPR <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc<span class="sc">$</span>col<span class="sc">&gt;=</span>t <span class="sc">&amp;</span> cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span>)<span class="sc">/</span><span class="fu">sum</span>(cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  FPR <span class="ot">&lt;-</span> <span class="fu">sum</span>(cc<span class="sc">$</span>col<span class="sc">&gt;=</span>t <span class="sc">&amp;</span> cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span>)<span class="sc">/</span><span class="fu">sum</span>(cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(TPR, FPR)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>})<span class="sc">%&gt;%</span><span class="fu">do.call</span>(rbind,.) <span class="ot">-&gt;</span> tmp</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tmp, <span class="fu">aes</span>(FPR, TPR))<span class="sc">+</span><span class="fu">geom_step</span>()<span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cc<span class="sc">$</span>col[cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&lt;=</span><span class="dv">200</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">200</span>, <span class="dv">10</span>), <span class="at">xlab =</span> <span class="st">'Total Cholesterol (mg/dL)'</span>, <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">'Malati (N = '</span>, <span class="fu">sum</span>(cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&lt;=</span><span class="dv">200</span>), <span class="st">')'</span>), <span class="at">axes =</span> F)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">200</span>, <span class="dv">10</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">seq</span>(<span class="dv">70</span>, <span class="dv">150</span>, <span class="dv">10</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">'purple'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">250</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">'grey'</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cc<span class="sc">$</span>col[cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&lt;=</span><span class="dv">200</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">200</span>, <span class="dv">10</span>), <span class="at">xlab =</span> <span class="st">'Total Cholesterol (mg/dL)'</span>, <span class="at">main =</span> <span class="fu">paste0</span>(<span class="st">'Sani (N = '</span>, <span class="fu">sum</span>(cc<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> cc<span class="sc">$</span>col <span class="sc">&lt;=</span><span class="dv">200</span>), <span class="st">')'</span>), <span class="at">axes =</span> F)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">200</span>, <span class="dv">10</span>))</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">seq</span>(<span class="dv">70</span>, <span class="dv">150</span>, <span class="dv">10</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">'purple'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">250</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">'grey'</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</section>
+<section id="interpretazione-della-curva-roc-per-variabili-continue" class="level3">
+<h3 class="anchored" data-anchor-id="interpretazione-della-curva-roc-per-variabili-continue"><strong>5. Interpretazione della Curva ROC per Variabili Continue</strong></h3>
+<p>La forma della curva ROC ci dà un’indicazione del&nbsp;<strong>potere discriminante</strong>&nbsp;della variabile continua:</p>
+<ul>
+<li><p>Se la curva ROC si avvicina all’angolo in alto a sinistra, significa che esiste una soglia di colesterolo in grado di separare molto bene i malati dai non malati, con un TPR alto e un FPR basso.</p></li>
+<li><p>Se la curva ROC si avvicina alla diagonale (la linea 45° che va da (0,0) a (1,1)), significa che il colesterolo non è un buon indicatore per distinguere tra malati e non malati; il modello è poco utile perché non discrimina bene tra le due categorie.</p></li>
+</ul>
+</section>
+<section id="area-sotto-la-curva-auc" class="level3">
+<h3 class="anchored" data-anchor-id="area-sotto-la-curva-auc"><strong>6. Area Sotto la Curva (AUC)</strong></h3>
+<p>L’<strong>AUC</strong>&nbsp;è una singola misura sintetica che quantifica la capacità discriminante della variabile continua rispetto alla condizione binaria.</p>
+<section id="interpretazione-dellauc" class="level4">
+<h4 class="anchored" data-anchor-id="interpretazione-dellauc"><strong>Interpretazione dell’AUC</strong>:</h4>
+<ul>
+<li><p><strong>AUC = 1</strong>: La variabile continua separa perfettamente malati e non malati, esiste una soglia perfetta.</p></li>
+<li><p><strong>AUC = 0.5</strong>: La variabile continua è inutile per discriminare tra malati e non malati; il risultato sarebbe equivalente a indovinare a caso.</p></li>
+<li><p><strong>AUC &gt; 0.8</strong>: La variabile ha una buona capacità di discriminazione.</p></li>
+<li><p><strong>AUC = 0.7-0.8</strong>: Moderata capacità discriminante.</p></li>
+<li><p><strong>AUC &lt; 0.7</strong>: Capacità discriminante scarsa.</p></li>
+</ul>
+</section>
+</section>
+<section id="esempio-pratico-colesterolo-e-malattie-cardiovascolari" class="level3">
+<h3 class="anchored" data-anchor-id="esempio-pratico-colesterolo-e-malattie-cardiovascolari"><strong>7. Esempio Pratico: Colesterolo e Malattie Cardiovascolari</strong></h3>
+<p>Immaginiamo uno studio che ha raccolto i livelli di colesterolo di 100 pazienti, di cui 50 hanno sviluppato malattie cardiovascolari e 50 no. Vogliamo vedere se i livelli di colesterolo sono un buon indicatore per identificare chi sviluppa malattie.</p>
+<ol type="1">
+<li><p><strong>Step 1: Modellazione della curva ROC</strong>: Utilizziamo diversi valori di soglia del colesterolo (ad esempio, 180 mg/dL, 200 mg/dL, 220 mg/dL) per classificare i pazienti. Per ogni soglia, calcoliamo il TPR e il FPR.</p></li>
+<li><p><strong>Step 2: Tracciamento della curva ROC</strong>: Tracciamo la curva ROC in base ai valori di TPR e FPR per ciascuna soglia. Se la curva sale rapidamente verso l’alto e rimane vicina all’angolo superiore sinistro del grafico, significa che il colesterolo ha un buon potere discriminante.</p></li>
+<li><p><strong>Step 3: Calcolo dell’AUC</strong>: Se l’AUC risultante è 0.85, possiamo concludere che i livelli di colesterolo hanno una buona capacità di distinguere tra pazienti malati e non malati. Se l’AUC fosse vicina a 0.5, il colesterolo non sarebbe un buon indicatore per prevedere le malattie cardiovascolari.</p></li>
+</ol>
+</section>
+<section id="vantaggi-delluso-della-curva-roc-per-variabili-continue" class="level3">
+<h3 class="anchored" data-anchor-id="vantaggi-delluso-della-curva-roc-per-variabili-continue"><strong>8. Vantaggi dell’Uso della Curva ROC per Variabili Continue</strong></h3>
+<ul>
+<li><p><strong>Valutazione indipendente dalla soglia</strong>: La curva ROC permette di valutare il potere discriminante della variabile continua senza dover fissare una soglia specifica.</p></li>
+<li><p><strong>Confronto tra variabili</strong>: È possibile confrontare diverse variabili (ad esempio, colesterolo vs pressione sanguigna) per vedere quale ha una migliore capacità di predizione, basandosi sull’AUC.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tmp<span class="sc">$</span>var <span class="ot">=</span> <span class="st">'T Chol'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>malati <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="dv">140</span>, <span class="dv">30</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sani <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="dv">110</span>, <span class="dv">30</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ps =</span> <span class="fu">c</span>(malati, sani), <span class="at">ty =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">'malati'</span>, <span class="st">'sani'</span>), <span class="at">each =</span> <span class="dv">10000</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ps, <span class="fu">aes</span>(ps, <span class="at">fill =</span> ty))<span class="sc">+</span><span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">5</span>)<span class="sc">+</span>ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()<span class="sc">+</span><span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">''</span>, <span class="at">x =</span> <span class="st">'PAS (mmHg)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">70</span>,<span class="dv">200</span>, <span class="dv">1</span>), <span class="cf">function</span>(t){</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  TPR <span class="ot">&lt;-</span> <span class="fu">sum</span>(ps<span class="sc">$</span>ps<span class="sc">&gt;=</span>t <span class="sc">&amp;</span> ps<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span>)<span class="sc">/</span><span class="fu">sum</span>(ps<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'malati'</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  FPR <span class="ot">&lt;-</span> <span class="fu">sum</span>(ps<span class="sc">$</span>ps<span class="sc">&gt;=</span>t <span class="sc">&amp;</span> ps<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span>)<span class="sc">/</span><span class="fu">sum</span>(ps<span class="sc">$</span>ty <span class="sc">==</span> <span class="st">'sani'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(TPR, FPR)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>})<span class="sc">%&gt;%</span><span class="fu">do.call</span>(rbind,.) <span class="ot">-&gt;</span> tmp2</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tmp2, <span class="fu">aes</span>(FPR, TPR))<span class="sc">+</span><span class="fu">geom_step</span>()<span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tmp2<span class="sc">$</span>var <span class="ot">&lt;-</span> <span class="st">'PAS'</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="fu">rbind</span>(tmp, tmp2)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(compare<span class="sc">%&gt;%</span><span class="fu">filter</span>(FPR <span class="sc">&lt;=</span> <span class="fl">0.65</span>), <span class="fu">aes</span>(FPR, TPR, <span class="at">col =</span> var))<span class="sc">+</span><span class="fu">geom_step</span>()<span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">col =</span> <span class="st">''</span>, <span class="at">fill =</span> <span class="st">''</span>)<span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()<span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">67</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(compare<span class="sc">%&gt;%</span><span class="fu">filter</span>(FPR <span class="sc">&lt;=</span> <span class="fl">0.65</span>), <span class="fu">aes</span>(FPR, TPR, <span class="at">col =</span> var))<span class="sc">+</span><span class="fu">geom_step</span>(<span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">col =</span> <span class="st">''</span>, <span class="at">fill =</span> <span class="st">''</span>)<span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_base</span>()<span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> TPR, <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">fill =</span> var), <span class="at">alpha =</span> .<span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">67</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Studi-osservazionali_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme(legend.position = 'bottom')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li><strong>Misura intuitiva</strong>: L’AUC fornisce un’indicazione semplice e facilmente interpretabile della qualità del modello, o in questo caso, della variabile predittiva.</li>
+</ul>
+</section>
+<section id="limiti-della-curva-roc-per-variabili-continue" class="level3">
+<h3 class="anchored" data-anchor-id="limiti-della-curva-roc-per-variabili-continue"><strong>9. Limiti della Curva ROC per Variabili Continue</strong></h3>
+<ul>
+<li><p><strong>Squilibrio tra classi</strong>: Se i malati sono molto meno numerosi rispetto ai non malati, la curva ROC può risultare meno utile. In questi casi, la&nbsp;<strong>Precision-Recall Curve</strong>&nbsp;può essere più informativa.</p></li>
+<li><p><strong>Interpretazione pratica della soglia</strong>: Sebbene la curva ROC e l’AUC siano utili per valutare la capacità di discriminazione, non forniscono una soglia ottimale per la classificazione. Determinare una soglia specifica richiede ulteriori considerazioni basate su altri parametri, come la prevalenza della malattia o il costo degli errori.</p></li>
+</ul>
+</section>
+<section id="conclusione-1" class="level3">
+<h3 class="anchored" data-anchor-id="conclusione-1"><strong>10. Conclusione</strong></h3>
+<p>La curva ROC e l’AUC sono strumenti preziosi per valutare il grado di associazione tra una variabile continua e una condizione binaria. Permettono di vedere quanto bene una variabile (come il colesterolo) possa predire un outcome binario (come lo sviluppo di malattie cardiovascolari), fornendo una rappresentazione visiva delle prestazioni a diverse soglie e una misura sintetica dell’efficacia del predittore. Tuttavia, devono essere interpretati con cautela, specialmente in contesti con classi squilibrate o in cui è necessario identificare una soglia ottimale di classificazione.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Giacomo Biganzoli">
+
+<title>Statistica Applicata alla Ricerca Biomedica - R - Survival</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Statistica Applicata alla Ricerca Biomedica - R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../Stat descrittiva.qmd" rel="" target="">
+ <span class="menu-text">Statistica descrittiva</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#il-gehan-study" id="toc-il-gehan-study" class="nav-link active" data-scroll-target="#il-gehan-study">Il Gehan Study</a></li>
+  <li><a href="#descrivere-la-sopravvivenza-per-i-bambini-che-non-hanno-ricevuto-6-mp" id="toc-descrivere-la-sopravvivenza-per-i-bambini-che-non-hanno-ricevuto-6-mp" class="nav-link" data-scroll-target="#descrivere-la-sopravvivenza-per-i-bambini-che-non-hanno-ricevuto-6-mp">Descrivere la sopravvivenza per i bambini che non hanno ricevuto 6-MP</a></li>
+  <li><a href="#descrivere-la-sopravvivenza-per-i-bambini-che-hanno-ricevuto-6-mp" id="toc-descrivere-la-sopravvivenza-per-i-bambini-che-hanno-ricevuto-6-mp" class="nav-link" data-scroll-target="#descrivere-la-sopravvivenza-per-i-bambini-che-hanno-ricevuto-6-mp">Descrivere la sopravvivenza per i bambini che hanno ricevuto 6-MP</a></li>
+  <li><a href="#descrivere-il-tempo-mediano-di-follow-up" id="toc-descrivere-il-tempo-mediano-di-follow-up" class="nav-link" data-scroll-target="#descrivere-il-tempo-mediano-di-follow-up">Descrivere il tempo mediano di follow-up</a>
+  <ul class="collapse">
+  <li><a href="#il-metodo-reverse-kaplan-meier" id="toc-il-metodo-reverse-kaplan-meier" class="nav-link" data-scroll-target="#il-metodo-reverse-kaplan-meier">Il metodo reverse Kaplan-Meier</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Survival</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Giacomo Biganzoli </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="il-gehan-study" class="level2">
+<h2 class="anchored" data-anchor-id="il-gehan-study">Il Gehan Study</h2>
+<p>Lo <strong>studio di Gehan</strong> condotto per confrontare il <strong>6-mercaptopurina (6-MP)</strong> con il <strong>placebo</strong> nel trattamento della <strong>leucemia acuta</strong> è stato uno studio clinico pionieristico negli anni ’50. L’obiettivo era valutare l’efficacia del 6-MP, un nuovo farmaco, rispetto a un gruppo di controllo trattato con placebo rispetto al tempo alla ricaduta.</p>
+<p>Il disegno prevedeva una <strong>fase iniziale</strong> in cui un piccolo numero di pazienti affetti da leucemia acuta veniva trattato con 6-MP. In base ai risultati preliminari, lo studio proseguiva se almeno un paziente mostrava segni di miglioramento. Questo approccio rapido consentiva di risparmiare tempo e risorse, focalizzandosi su trattamenti promettenti. Lo studio dimostrò che il 6-MP portava a un miglioramento significativo nei pazienti, confermandone l’efficacia rispetto al placebo.</p>
+<p>Questo studio è stato un modello per la conduzione di studi clinici successivi in campo oncologico.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> gehan</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="fu">rownames</span>(data)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>id <span class="ot">&lt;-</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(<span class="fu">as.factor</span>(data<span class="sc">$</span>id), data<span class="sc">$</span>time)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(time, id))<span class="sc">+</span><span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(treat), <span class="at">scales =</span> <span class="st">'free'</span>)<span class="sc">+</span><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> time, <span class="at">y =</span> id, <span class="at">yend =</span> id, <span class="at">col =</span> treat) )<span class="sc">+</span>ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">shape =</span> <span class="st">'status'</span>, <span class="at">col =</span> <span class="st">'Treatment'</span>)<span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="descrivere-la-sopravvivenza-per-i-bambini-che-non-hanno-ricevuto-6-mp" class="level2">
+<h2 class="anchored" data-anchor-id="descrivere-la-sopravvivenza-per-i-bambini-che-non-hanno-ricevuto-6-mp">Descrivere la sopravvivenza per i bambini che non hanno ricevuto 6-MP</h2>
+<p>Supponiamo di voler descrivere la durata di tempo libero da ricaduta dei bambini che non hanno ricevuto 6-MP. Consideriamo la variabile relativa al tempo di follow-up dei soggetti descritta in mesi raggiunti dall’inizio del follow-up. Questa è una variabile numerica discreta e possiamo quindi utilizzare gli strumenti di statistica descrittiva visti nella scorsa lezione per sintetizzare le informazioni essenziali. Possiamo utilizzare un grafico ‘a canne d’organo’, oppure un boxplot considerando (dato il numero esiguo di osservazioni) anche di rappresentare come punti i singoli tempi per ogni soggetto, ed infine la funzione di distribuzione cumulativa empirica.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">table</span>(data<span class="sc">$</span>time, data<span class="sc">$</span>treat))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(tmp) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'time'</span>, <span class="st">'treat'</span>, <span class="st">'freq'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">subset</span>(tmp, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, freq))<span class="sc">+</span><span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(treat))<span class="sc">+</span><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">xend =</span> time, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> freq),  <span class="at">color =</span> <span class="st">'#00BFC4'</span>)<span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>,  <span class="at">col =</span> <span class="st">'Treatment'</span>)<span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">!=</span> <span class="st">'6-MP'</span>]), <span class="at">alpha =</span> .<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time))<span class="sc">+</span><span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> .<span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dotplot</span>(<span class="at">size =</span> .<span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">5</span>)<span class="sc">+</span><span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_dotplot(size = 0.5, alpha = 0.5): Ignoring unknown parameters:
+`size`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bin width defaults to 1/30 of the range of the data. Pick better value with
+`binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, <span class="at">col =</span> treat))<span class="sc">+</span><span class="fu">stat_ecdf</span>(<span class="at">col =</span> <span class="st">'#00BFC4'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>Nota bene: la funzione di distribuzione cumulativa mi descrive la probabilità di avere un tempo <span class="math inline">\(T \le t, P(T\le t)\)</span>. Pertanto rappresenta l’incidenza cumulativa di morte al tempo <span class="math inline">\(t\)</span>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:MASS':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(<span class="fu">subset</span>(data, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>), </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">mutate</span>(<span class="fu">as.data.frame</span>(<span class="fu">table</span>(time)), <span class="at">cum.f =</span> <span class="fu">paste</span>(<span class="fu">cumsum</span>(Freq), <span class="st">'/'</span>, <span class="fu">sum</span>(Freq)), <span class="at">cum.inc =</span> <span class="fu">round</span>(<span class="fu">cumsum</span>(Freq)<span class="sc">/</span><span class="fu">sum</span>(Freq),<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   time Freq   cum.f cum.inc
+1     1    2  2 / 21    0.10
+2     2    2  4 / 21    0.19
+3     3    1  5 / 21    0.24
+4     4    2  7 / 21    0.33
+5     5    2  9 / 21    0.43
+6     8    4 13 / 21    0.62
+7    11    2 15 / 21    0.71
+8    12    2 17 / 21    0.81
+9    15    1 18 / 21    0.86
+10   17    1 19 / 21    0.90
+11   22    1 20 / 21    0.95
+12   23    1 21 / 21    1.00</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, cens)<span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> <span class="fu">subset</span>(data, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>time),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span><span class="sc">-</span>f<span class="sc">$</span>surv)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> ci</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">!=</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, <span class="at">col =</span> treat))<span class="sc">+</span><span class="fu">stat_ecdf</span>(<span class="at">col =</span> <span class="st">'#00BFC4'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &lt;= t)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>Ma come definiamo la sopravvivenza libera da ricaduta ad un determinato tempo <span class="math inline">\(t\)</span>? Semplice! Visto che sappiamo che l’incidenza cumulativa <span class="math inline">\(F(t)\)</span> ad un tempo T (calcolata nel grafico sopra) è uguale a <span class="math inline">\(P(T\le t)\)</span>, la sopravvivenza al tempo <span class="math inline">\(t\)</span> non sarà altro che il complemento di quella probabilità, ovvero: <span class="math inline">\(S(t) = 1 - F(t) = 1 - P(T\le t) = P(T&gt;t)\)</span></p>
+<p>Non ci resta allora che fare il complemento della funzione di distribuzione cumulativa ed ecco calcolata la sopravvivenza!</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">!=</span> <span class="st">'6-MP'</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ecdfDIBIC <span class="ot">&lt;-</span> <span class="cf">function</span>(x, low){</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">table</span>(x))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>cum.freq <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(x<span class="sc">$</span>Freq)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>perc <span class="ot">&lt;-</span> <span class="fu">round</span>(x<span class="sc">$</span>cum.freq<span class="sc">/</span><span class="fu">sum</span>(x<span class="sc">$</span>Freq),<span class="dv">2</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(x)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">'val'</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>val <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(x<span class="sc">$</span>val))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">min</span>(x<span class="sc">$</span>val, <span class="at">na.rm =</span> T) <span class="sc">&gt;</span> low){</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    val <span class="ot">=</span> <span class="fu">c</span>(low, x<span class="sc">$</span>val)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    perc <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, x<span class="sc">$</span>perc)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>     <span class="fu">data.frame</span>(val, perc)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(x<span class="sc">$</span>val, x<span class="sc">$</span>perc)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">ecdfDIBIC</span>(data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">!=</span> <span class="st">'6-MP'</span>], <span class="at">low =</span> <span class="dv">0</span>)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(e, <span class="fu">aes</span>(val, <span class="dv">1</span><span class="sc">-</span>perc))<span class="sc">+</span><span class="fu">geom_step</span>(<span class="at">col =</span> <span class="st">'#00BFC4'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">inherit.aes =</span> F, <span class="at">data =</span>ci , <span class="fu">aes</span>(time, <span class="dv">1</span><span class="sc">-</span>ci), <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &gt; t)'</span>, <span class="at">caption =</span> <span class="st">'Tempo mediano calcolato da noi: 8 </span><span class="sc">\n</span><span class="st"> tempo mediano riportato nel paper: 8'</span>)<span class="sc">+</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">8</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#00BFC4'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">8</span>, <span class="at">xend =</span> <span class="dv">8</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#00BFC4'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="descrivere-la-sopravvivenza-per-i-bambini-che-hanno-ricevuto-6-mp" class="level2">
+<h2 class="anchored" data-anchor-id="descrivere-la-sopravvivenza-per-i-bambini-che-hanno-ricevuto-6-mp">Descrivere la sopravvivenza per i bambini che hanno ricevuto 6-MP</h2>
+<p>Proviamo ora a descrivere l’esperienza di sopravvivenza dalla ricaduta dei bambini trattati con 6-MP.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, cens)<span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> <span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>time),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span><span class="sc">-</span>f<span class="sc">$</span>surv)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> ci</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, <span class="at">col =</span> treat))<span class="sc">+</span><span class="fu">stat_ecdf</span>(<span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &lt;= t)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">ecdfDIBIC</span>(data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">==</span> <span class="st">'6-MP'</span>], <span class="at">low =</span> <span class="dv">0</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(e, <span class="fu">aes</span>(val, <span class="dv">1</span><span class="sc">-</span>perc))<span class="sc">+</span><span class="fu">geom_step</span>(<span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">36</span>, <span class="dv">1</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">36</span>))<span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,.<span class="dv">05</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">inherit.aes =</span> F, <span class="at">data =</span>ci , <span class="fu">aes</span>(time, <span class="dv">1</span><span class="sc">-</span>ci), <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &gt; t)'</span>, <span class="at">caption =</span> <span class="st">'Tempo mediano calcolato da noi: 16 </span><span class="sc">\n</span><span class="st"> tempo mediano riportato nel paper: 23'</span>)<span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">23</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">16</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">16</span>, <span class="at">xend =</span> <span class="dv">16</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>Stiamo sottostimando la sopravvivenza (o sovrastimando l’inicidenza di ricaduta) nel gruppo di 6-MP. Come mai?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>cens2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data<span class="sc">$</span>cens <span class="sc">==</span> <span class="dv">1</span>, <span class="st">'Dead'</span>, <span class="st">'Alive'</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(time, id))<span class="sc">+</span><span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(treat), <span class="at">scales =</span> <span class="st">'free'</span>)<span class="sc">+</span><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> time, <span class="at">y =</span> id, <span class="at">yend =</span> id, <span class="at">col =</span> treat) )<span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(time, id, <span class="at">shape =</span> <span class="fu">factor</span>(cens2)), <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">shape =</span> <span class="st">'status'</span>, <span class="at">col =</span> <span class="st">'Treatment'</span>)<span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>La discrepanza si realizza perché non stiamo considerando lo stato dei soggetti ai tempi di follow-up. Mentre il gruppo placebo ha 21/21 eventi di ricaduta durante tutto il follow-up, il gruppo 6-MP ha 9 bambini che hanno ricaduta, mentre restanti i restanti 12 sono liberi da ricaduta ma escono dal follow-up a tempi variabili prima della fine dello studio. Questo fenomeno viene chiamato ‘censura a destra’ ed i soggetti sono definiti censorizzati. Una volta usciti dal follow-up, i soggetti censorizzati non possono essere più considerati a rischio dell’osservazione dell’evento di morte nel follow-up.</p>
+<p><strong>Lo stimatore della sopravvivenza di Kaplan e Meier (1958)</strong></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, id))<span class="sc">+</span><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> time, <span class="at">y =</span> id, <span class="at">yend =</span> id, <span class="at">col =</span> treat) )<span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(time, id, <span class="at">shape =</span> <span class="fu">factor</span>(cens2)), <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">shape =</span> <span class="st">'status'</span>, <span class="at">col =</span> <span class="st">'Treatment'</span>)<span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>))<span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">==</span> <span class="st">'6-MP'</span> <span class="sc">&amp;</span> data<span class="sc">$</span>cens2 <span class="sc">==</span> <span class="st">'Dead'</span>], <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, cens)<span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> <span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>time), </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.at.risk =</span> <span class="fu">c</span>(f<span class="sc">$</span>n.risk[<span class="dv">1</span>],f<span class="sc">$</span>n.risk),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.event =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>n.event),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.cens =</span> <span class="fu">c</span>(<span class="dv">0</span>, f<span class="sc">$</span>n.censor), </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cum.hz =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>cumhaz),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span><span class="sc">-</span>f<span class="sc">$</span>surv)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">mutate</span>(st, <span class="at">hz =</span> cum.hz<span class="sc">-</span><span class="fu">lag</span>(cum.hz))</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>st<span class="sc">$</span>hz <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(st<span class="sc">$</span>hz), st<span class="sc">$</span>cum.hz, st<span class="sc">$</span>hz)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">transmute</span>(st, time, n.at.risk, n.event, n.cens, <span class="st">"d/n"</span> <span class="ot">=</span> <span class="fu">round</span>(hz,<span class="dv">3</span>), <span class="st">"1-d/n"</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span>hz,<span class="dv">3</span>), <span class="at">surv =</span> <span class="fu">round</span>(<span class="fu">cumprod</span>(<span class="dv">1</span><span class="sc">-</span>hz),<span class="dv">3</span>), <span class="at">surv.pap =</span> <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span>ci,<span class="dv">3</span>) )</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>p<span class="sc">+</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">inherit.aes =</span> F, <span class="at">data =</span> <span class="fu">filter</span>(st), <span class="fu">aes</span>(time, <span class="at">y =</span> <span class="dv">22</span>, <span class="at">label =</span> <span class="fu">ifelse</span>(n.event <span class="sc">!=</span><span class="dv">0</span>,<span class="fu">paste0</span>(st<span class="sc">$</span>n.event, <span class="st">'/'</span>, st<span class="sc">$</span>n.at.risk), <span class="cn">NA</span>)), <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">22</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Use of `st$n.event` is discouraged.
+ℹ Use `n.event` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Use of `st$n.at.risk` is discouraged.
+ℹ Use `n.at.risk` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
+(`geom_text()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gt</span>(st)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="tjddbkmsjm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tjddbkmsjm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tjddbkmsjm thead, #tjddbkmsjm tbody, #tjddbkmsjm tfoot, #tjddbkmsjm tr, #tjddbkmsjm td, #tjddbkmsjm th {
+  border-style: none;
+}
+
+#tjddbkmsjm p {
+  margin: 0;
+  padding: 0;
+}
+
+#tjddbkmsjm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tjddbkmsjm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tjddbkmsjm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tjddbkmsjm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tjddbkmsjm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tjddbkmsjm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tjddbkmsjm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tjddbkmsjm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tjddbkmsjm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tjddbkmsjm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tjddbkmsjm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tjddbkmsjm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tjddbkmsjm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tjddbkmsjm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tjddbkmsjm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tjddbkmsjm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tjddbkmsjm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tjddbkmsjm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tjddbkmsjm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tjddbkmsjm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tjddbkmsjm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tjddbkmsjm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tjddbkmsjm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tjddbkmsjm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tjddbkmsjm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tjddbkmsjm .gt_left {
+  text-align: left;
+}
+
+#tjddbkmsjm .gt_center {
+  text-align: center;
+}
+
+#tjddbkmsjm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tjddbkmsjm .gt_font_normal {
+  font-weight: normal;
+}
+
+#tjddbkmsjm .gt_font_bold {
+  font-weight: bold;
+}
+
+#tjddbkmsjm .gt_font_italic {
+  font-style: italic;
+}
+
+#tjddbkmsjm .gt_super {
+  font-size: 65%;
+}
+
+#tjddbkmsjm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tjddbkmsjm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tjddbkmsjm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tjddbkmsjm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tjddbkmsjm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tjddbkmsjm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tjddbkmsjm .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tjddbkmsjm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tjddbkmsjm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="time">time</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.at.risk">n.at.risk</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.event">n.event</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.cens">n.cens</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="d/n">d/n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="1-d/n">1-d/n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="surv">surv</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="surv.pap">surv.pap</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="time" class="gt_row gt_right">0</td>
+<td headers="n.at.risk" class="gt_row gt_right">21</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">1.000</td>
+<td headers="surv.pap" class="gt_row gt_right">1.000</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">6</td>
+<td headers="n.at.risk" class="gt_row gt_right">21</td>
+<td headers="n.event" class="gt_row gt_right">3</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.143</td>
+<td headers="1-d/n" class="gt_row gt_right">0.857</td>
+<td headers="surv" class="gt_row gt_right">0.857</td>
+<td headers="surv.pap" class="gt_row gt_right">0.857</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">7</td>
+<td headers="n.at.risk" class="gt_row gt_right">17</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.059</td>
+<td headers="1-d/n" class="gt_row gt_right">0.941</td>
+<td headers="surv" class="gt_row gt_right">0.807</td>
+<td headers="surv.pap" class="gt_row gt_right">0.807</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">9</td>
+<td headers="n.at.risk" class="gt_row gt_right">16</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.807</td>
+<td headers="surv.pap" class="gt_row gt_right">0.807</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">10</td>
+<td headers="n.at.risk" class="gt_row gt_right">15</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.067</td>
+<td headers="1-d/n" class="gt_row gt_right">0.933</td>
+<td headers="surv" class="gt_row gt_right">0.753</td>
+<td headers="surv.pap" class="gt_row gt_right">0.753</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">11</td>
+<td headers="n.at.risk" class="gt_row gt_right">13</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.753</td>
+<td headers="surv.pap" class="gt_row gt_right">0.753</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">13</td>
+<td headers="n.at.risk" class="gt_row gt_right">12</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.083</td>
+<td headers="1-d/n" class="gt_row gt_right">0.917</td>
+<td headers="surv" class="gt_row gt_right">0.690</td>
+<td headers="surv.pap" class="gt_row gt_right">0.690</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">16</td>
+<td headers="n.at.risk" class="gt_row gt_right">11</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.091</td>
+<td headers="1-d/n" class="gt_row gt_right">0.909</td>
+<td headers="surv" class="gt_row gt_right">0.627</td>
+<td headers="surv.pap" class="gt_row gt_right">0.627</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">17</td>
+<td headers="n.at.risk" class="gt_row gt_right">10</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.627</td>
+<td headers="surv.pap" class="gt_row gt_right">0.627</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">19</td>
+<td headers="n.at.risk" class="gt_row gt_right">9</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.627</td>
+<td headers="surv.pap" class="gt_row gt_right">0.627</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">20</td>
+<td headers="n.at.risk" class="gt_row gt_right">8</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.627</td>
+<td headers="surv.pap" class="gt_row gt_right">0.627</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">22</td>
+<td headers="n.at.risk" class="gt_row gt_right">7</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.143</td>
+<td headers="1-d/n" class="gt_row gt_right">0.857</td>
+<td headers="surv" class="gt_row gt_right">0.538</td>
+<td headers="surv.pap" class="gt_row gt_right">0.538</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">23</td>
+<td headers="n.at.risk" class="gt_row gt_right">6</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.167</td>
+<td headers="1-d/n" class="gt_row gt_right">0.833</td>
+<td headers="surv" class="gt_row gt_right">0.448</td>
+<td headers="surv.pap" class="gt_row gt_right">0.448</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">25</td>
+<td headers="n.at.risk" class="gt_row gt_right">5</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.448</td>
+<td headers="surv.pap" class="gt_row gt_right">0.448</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">32</td>
+<td headers="n.at.risk" class="gt_row gt_right">4</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">2</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.448</td>
+<td headers="surv.pap" class="gt_row gt_right">0.448</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">34</td>
+<td headers="n.at.risk" class="gt_row gt_right">2</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.448</td>
+<td headers="surv.pap" class="gt_row gt_right">0.448</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">35</td>
+<td headers="n.at.risk" class="gt_row gt_right">1</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.448</td>
+<td headers="surv.pap" class="gt_row gt_right">0.448</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(st, <span class="fu">aes</span>(time, surv))<span class="sc">+</span><span class="fu">geom_step</span>(<span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="fu">aes</span>(time, surv.pap), <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &gt; t)'</span>, <span class="at">caption =</span> <span class="st">'Tempo mediano calcolato da noi: 23 </span><span class="sc">\n</span><span class="st"> tempo mediano riportato nel paper: 23'</span>)<span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,.<span class="dv">05</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">36</span>,<span class="dv">1</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">36</span>))<span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">23</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">23</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+</section>
+<section id="descrivere-il-tempo-mediano-di-follow-up" class="level2">
+<h2 class="anchored" data-anchor-id="descrivere-il-tempo-mediano-di-follow-up">Descrivere il tempo mediano di follow-up</h2>
+<p>Prima o poi vi capiterà, o vi sarà già capitato, di avere a che fare con uno studio che coinvolga la raccolta di dati durante un follow-up, in cui viene misurato il tempo ad un preciso evento e volete dare una misura di sintesi di quanto è durato il follow-up dei pazienti, ovvero per quanto tempo essi sono stati sotto osservazione prima di uscire dal follow-up.</p>
+<p>Come considerare i semplici tempi di evento dimenticandosi dello stato dei soggetti era sbagliato nell’analisi dei tempi all’evento, così lo è nel momento in cui si vuole descrivere il tempo di follow-up. In questo caso siamo interessati a dare una misura della proporzione di pazienti che rimangono sotto osservazione ad un determinato tempo (t) e non escono né per un evento avvenuto né perchè censorizzati a destra.</p>
+<p>N.B: gli indici di centralità non possono essere utilizzati! Dobbiamo utilizzare gli strumenti di analisi della sopravvivenza visti prima.</p>
+<section id="il-metodo-reverse-kaplan-meier" class="level3">
+<h3 class="anchored" data-anchor-id="il-metodo-reverse-kaplan-meier">Il metodo reverse Kaplan-Meier</h3>
+<p>Il <a href="https://pdf.sciencedirectassets.com/271152/1-s2.0-S0197245600X00116/1-s2.0-019724569600075X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDYkKmsECVk2D%2Bto%2BgCMzQsfHyxVWmd1QTlawbY6S5gmwIhAIntvUXhGQzBxfRT7KBT74ql0Xm5hW9FcFBZNCVxJcc4KrIFCBkQBRoMMDU5MDAzNTQ2ODY1IgxKFbPciD5WXkWcBbEqjwXUQK4YOywP4jr07TkMTxz6An2Il%2Bi3Ke9V%2FjA%2Fybo8iY5OL5WCEdigbUqtcvFjWtjtsKPW%2F3%2FcwWs3Mw3LQ3lO0c82fEG9sZwyIBfND7aRYyQZiDq3dZ3%2FRGYv5GhOWOsZd6AkUZNobhbKSZl4vVnUPTzXNdjMZ0G%2BIqLl3hYjwZpTTX%2BKJbtPX249BxGYzDriFgdxM%2Bakvpd99vanQvsxdf%2F3QOJgmWSGeubqRGxOCogEWeQYWuIyPK0C%2BmrZFe9pGIq7TqXGGaj0yYwhywWeGIp82leiYChYl4BrVfkBo4u1BdeCypiwpChflH3C6kLiCMokWWMoQ2yfWJalku3s65dAWFSMgBIlAsKMfRb59HQjLTssx809TkVBUA4e%2B87ZYAn9GrZmqk2piCjRmkrB8cQNzvtzFAUd6C4DLpn3CL0uCKCjlo30PA9MEhWucNc2JWSUApsH4nkRLi9C9X85Jr3Wd7BTp4az%2BgODN6eyKgRYYK%2FQ%2BVm%2FHc%2FdvSiZimriEcR0H18NQiWfQtmfIU0N%2BoaGb9no1PNtGuNye8wy%2BalLHbMzAXwKlFzeNcmAEeNlWBlyD%2FoMW9CMPaiCQOz1Z%2BeM5NTeTfkrS0Fh9pTulk9CX7zo2inxjUIHJqp7IlJc8LAH6UmViTlvIQDOSEPF17bNmkIlzgx5tFj7mKbO58rAAe9CO%2FAvyeclC6Z5WMgIpW7IZWIaPuLJFpfk%2BrFl%2B2jzbWnanN8vx4%2B%2B20QOHv4HZyUR6FTtInnBkYg1kLG6iSPcyuY5EQEUoE2IWAwttJbXsMjvLY7HDUtAMjj4poeR6JUMR2cdOfi0jvKMEFpwoFMogNi2YW%2Bo0tkny5fMSSBy9wW97JBRgq18eK%2BlMKeqobcGOrABbU7UHmRtZEPsJ8uFnPq2zul9spU%2B9jRiAp4AmNQAek72bFPhNdqfTvZbojuiPKwRkzlkUEyJAsB9y%2FvSbk%2BT%2BFrCZTPGElPf%2FPaaOYnFBlvTjPi%2BcQr8g7V5wmv%2BBqHcqvPADRRa7Gtws4hFCQlOYDdBkhLcX%2FVvs%2B0da6fPfNyk83fSZexOJzeQUBZJ0KvjpMC4asxf7GedADHs0LFKi944M5PLl4CFMrQ8%2BxKoDww%3D&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20240916T162957Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAQ3PHCVTYQPEPPWAZ%2F20240916%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=a8ce072471576143c3750f01536961ac7db03ea8f26548dbddec02266779bcb1&amp;hash=990d676be3a620249498ce45850e1a609b2489f48d257936afdb0c25cac3a7e8&amp;host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&amp;pii=019724569600075X&amp;tid=spdf-9d5fe12e-2ac7-4fe0-8265-05ea7aaab8a6&amp;sid=81e1f31040d9414eed19ef2413c3c7da99c1gxrqb&amp;type=client&amp;tsoh=d3d3LXNjaWVuY2VkaXJlY3QtY29tLnByb3MxLmxpYi51bmltaS5pdA%3D%3D&amp;ua=13125d00535d53065e550a&amp;rr=8c423d00de4a0dfe&amp;cc=it">metodo</a> consiste nel “invertire” lo stato dei soggetti: considerare come “eventi” un evento di censorizzazione (uscita dal follow-up) e come stato di censorizzazione gli eventi avvenuti durante il follow-up. In questo modo possiamo, con i metodi visti prima, la probabilità <span class="math inline">\(P(T\le t)\)</span> dove t rappresenta ora il tempo di uscita dal follow-up. Di conseguenza possiamo calcolare il complemento a questa probabilità che definisce la probabilità di sopravvivenza all’uscita dal follow-up dei soggetti <span class="math inline">\(P(T&gt;t)\)</span></p>
+<p>Focalizziamoci sul gruppo di bambini che ha ricevuto 6-MP. Come dicevamo, 9 di questi bambini hanno avuto una ricaduta mentre 12 di questi sono rimasti liberi da evento e sono usciti dal follow-up.</p>
+<p>“Invertendo” lo stato dei soggeti, 9 di questi risulteranno come nuovi soggetti censorizzati a destra, mentre 12 di questi come con evento di uscita dal follow-up.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>), <span class="fu">aes</span>(time, id))<span class="sc">+</span><span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> time, <span class="at">y =</span> id, <span class="at">yend =</span> id, <span class="at">col =</span> treat) )<span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(time, id, <span class="at">shape =</span> <span class="fu">factor</span>(cens2)), <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">20</span>))<span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">shape =</span> <span class="st">'status'</span>, <span class="at">col =</span> <span class="st">'Treatment'</span>)<span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>))<span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> data<span class="sc">$</span>time[data<span class="sc">$</span>treat <span class="sc">==</span> <span class="st">'6-MP'</span> <span class="sc">&amp;</span> data<span class="sc">$</span>cens2 <span class="sc">==</span> <span class="st">'Alive'</span>], <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, <span class="dv">1</span><span class="sc">*</span>(cens<span class="sc">==</span><span class="dv">0</span>))<span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> <span class="fu">subset</span>(data, treat <span class="sc">==</span> <span class="st">'6-MP'</span>))</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>time), </span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.at.risk =</span> <span class="fu">c</span>(f<span class="sc">$</span>n.risk[<span class="dv">1</span>],f<span class="sc">$</span>n.risk),</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.event =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>n.event),</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.cens =</span> <span class="fu">c</span>(<span class="dv">0</span>, f<span class="sc">$</span>n.censor), </span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">cum.hz =</span> <span class="fu">c</span>(<span class="dv">0</span>,f<span class="sc">$</span>cumhaz),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span><span class="sc">-</span>f<span class="sc">$</span>surv)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">mutate</span>(st, <span class="at">hz =</span> cum.hz<span class="sc">-</span><span class="fu">lag</span>(cum.hz))</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>st<span class="sc">$</span>hz <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(st<span class="sc">$</span>hz), st<span class="sc">$</span>cum.hz, st<span class="sc">$</span>hz)</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>st <span class="ot">&lt;-</span> <span class="fu">transmute</span>(st, time, n.at.risk, n.event, n.cens, <span class="st">"d/n"</span> <span class="ot">=</span> <span class="fu">round</span>(hz,<span class="dv">3</span>), <span class="st">"1-d/n"</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span>hz,<span class="dv">3</span>), <span class="at">surv =</span> <span class="fu">round</span>(<span class="fu">cumprod</span>(<span class="dv">1</span><span class="sc">-</span>hz),<span class="dv">3</span>), <span class="at">surv.pap =</span> <span class="fu">round</span>(<span class="dv">1</span><span class="sc">-</span>ci,<span class="dv">3</span>) )</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>p<span class="sc">+</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">inherit.aes =</span> F, <span class="at">data =</span> <span class="fu">filter</span>(st), <span class="fu">aes</span>(time, <span class="at">y =</span> <span class="dv">22</span>, <span class="at">label =</span> <span class="fu">ifelse</span>(n.event <span class="sc">!=</span><span class="dv">0</span>,<span class="fu">paste0</span>(st<span class="sc">$</span>n.event, <span class="st">'/'</span>, st<span class="sc">$</span>n.at.risk), <span class="cn">NA</span>)), <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">22</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Use of `st$n.event` is discouraged.
+ℹ Use `n.event` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Use of `st$n.at.risk` is discouraged.
+ℹ Use `n.at.risk` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 6 rows containing missing values or values outside the scale range
+(`geom_text()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="576"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gt<span class="sc">::</span><span class="fu">gt</span>(st)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="keypcregoo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#keypcregoo table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#keypcregoo thead, #keypcregoo tbody, #keypcregoo tfoot, #keypcregoo tr, #keypcregoo td, #keypcregoo th {
+  border-style: none;
+}
+
+#keypcregoo p {
+  margin: 0;
+  padding: 0;
+}
+
+#keypcregoo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#keypcregoo .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#keypcregoo .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#keypcregoo .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#keypcregoo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#keypcregoo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#keypcregoo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#keypcregoo .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#keypcregoo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#keypcregoo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#keypcregoo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#keypcregoo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#keypcregoo .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#keypcregoo .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#keypcregoo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#keypcregoo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#keypcregoo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#keypcregoo .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#keypcregoo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#keypcregoo .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#keypcregoo .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#keypcregoo .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#keypcregoo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#keypcregoo .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#keypcregoo .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#keypcregoo .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#keypcregoo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#keypcregoo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#keypcregoo .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#keypcregoo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#keypcregoo .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#keypcregoo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#keypcregoo .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#keypcregoo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#keypcregoo .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#keypcregoo .gt_left {
+  text-align: left;
+}
+
+#keypcregoo .gt_center {
+  text-align: center;
+}
+
+#keypcregoo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#keypcregoo .gt_font_normal {
+  font-weight: normal;
+}
+
+#keypcregoo .gt_font_bold {
+  font-weight: bold;
+}
+
+#keypcregoo .gt_font_italic {
+  font-style: italic;
+}
+
+#keypcregoo .gt_super {
+  font-size: 65%;
+}
+
+#keypcregoo .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#keypcregoo .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#keypcregoo .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#keypcregoo .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#keypcregoo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#keypcregoo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#keypcregoo .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#keypcregoo .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#keypcregoo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="time">time</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.at.risk">n.at.risk</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.event">n.event</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n.cens">n.cens</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="d/n">d/n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="1-d/n">1-d/n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="surv">surv</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="surv.pap">surv.pap</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="time" class="gt_row gt_right">0</td>
+<td headers="n.at.risk" class="gt_row gt_right">21</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">1.000</td>
+<td headers="surv.pap" class="gt_row gt_right">1.000</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">6</td>
+<td headers="n.at.risk" class="gt_row gt_right">21</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">3</td>
+<td headers="d/n" class="gt_row gt_right">0.048</td>
+<td headers="1-d/n" class="gt_row gt_right">0.952</td>
+<td headers="surv" class="gt_row gt_right">0.952</td>
+<td headers="surv.pap" class="gt_row gt_right">0.952</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">7</td>
+<td headers="n.at.risk" class="gt_row gt_right">17</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.952</td>
+<td headers="surv.pap" class="gt_row gt_right">0.952</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">9</td>
+<td headers="n.at.risk" class="gt_row gt_right">16</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.062</td>
+<td headers="1-d/n" class="gt_row gt_right">0.938</td>
+<td headers="surv" class="gt_row gt_right">0.893</td>
+<td headers="surv.pap" class="gt_row gt_right">0.893</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">10</td>
+<td headers="n.at.risk" class="gt_row gt_right">15</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.067</td>
+<td headers="1-d/n" class="gt_row gt_right">0.933</td>
+<td headers="surv" class="gt_row gt_right">0.833</td>
+<td headers="surv.pap" class="gt_row gt_right">0.833</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">11</td>
+<td headers="n.at.risk" class="gt_row gt_right">13</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.077</td>
+<td headers="1-d/n" class="gt_row gt_right">0.923</td>
+<td headers="surv" class="gt_row gt_right">0.769</td>
+<td headers="surv.pap" class="gt_row gt_right">0.769</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">13</td>
+<td headers="n.at.risk" class="gt_row gt_right">12</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.769</td>
+<td headers="surv.pap" class="gt_row gt_right">0.769</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">16</td>
+<td headers="n.at.risk" class="gt_row gt_right">11</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.769</td>
+<td headers="surv.pap" class="gt_row gt_right">0.769</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">17</td>
+<td headers="n.at.risk" class="gt_row gt_right">10</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.100</td>
+<td headers="1-d/n" class="gt_row gt_right">0.900</td>
+<td headers="surv" class="gt_row gt_right">0.692</td>
+<td headers="surv.pap" class="gt_row gt_right">0.692</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">19</td>
+<td headers="n.at.risk" class="gt_row gt_right">9</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.111</td>
+<td headers="1-d/n" class="gt_row gt_right">0.889</td>
+<td headers="surv" class="gt_row gt_right">0.615</td>
+<td headers="surv.pap" class="gt_row gt_right">0.615</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">20</td>
+<td headers="n.at.risk" class="gt_row gt_right">8</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.125</td>
+<td headers="1-d/n" class="gt_row gt_right">0.875</td>
+<td headers="surv" class="gt_row gt_right">0.538</td>
+<td headers="surv.pap" class="gt_row gt_right">0.538</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">22</td>
+<td headers="n.at.risk" class="gt_row gt_right">7</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.538</td>
+<td headers="surv.pap" class="gt_row gt_right">0.538</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">23</td>
+<td headers="n.at.risk" class="gt_row gt_right">6</td>
+<td headers="n.event" class="gt_row gt_right">0</td>
+<td headers="n.cens" class="gt_row gt_right">1</td>
+<td headers="d/n" class="gt_row gt_right">0.000</td>
+<td headers="1-d/n" class="gt_row gt_right">1.000</td>
+<td headers="surv" class="gt_row gt_right">0.538</td>
+<td headers="surv.pap" class="gt_row gt_right">0.538</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">25</td>
+<td headers="n.at.risk" class="gt_row gt_right">5</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.200</td>
+<td headers="1-d/n" class="gt_row gt_right">0.800</td>
+<td headers="surv" class="gt_row gt_right">0.431</td>
+<td headers="surv.pap" class="gt_row gt_right">0.431</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">32</td>
+<td headers="n.at.risk" class="gt_row gt_right">4</td>
+<td headers="n.event" class="gt_row gt_right">2</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.500</td>
+<td headers="1-d/n" class="gt_row gt_right">0.500</td>
+<td headers="surv" class="gt_row gt_right">0.215</td>
+<td headers="surv.pap" class="gt_row gt_right">0.215</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">34</td>
+<td headers="n.at.risk" class="gt_row gt_right">2</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">0.500</td>
+<td headers="1-d/n" class="gt_row gt_right">0.500</td>
+<td headers="surv" class="gt_row gt_right">0.108</td>
+<td headers="surv.pap" class="gt_row gt_right">0.108</td></tr>
+    <tr><td headers="time" class="gt_row gt_right">35</td>
+<td headers="n.at.risk" class="gt_row gt_right">1</td>
+<td headers="n.event" class="gt_row gt_right">1</td>
+<td headers="n.cens" class="gt_row gt_right">0</td>
+<td headers="d/n" class="gt_row gt_right">1.000</td>
+<td headers="1-d/n" class="gt_row gt_right">0.000</td>
+<td headers="surv" class="gt_row gt_right">0.000</td>
+<td headers="surv.pap" class="gt_row gt_right">0.000</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(st, <span class="fu">aes</span>(time, surv))<span class="sc">+</span><span class="fu">geom_step</span>(<span class="at">col =</span> <span class="st">'#F8766D'</span>, <span class="at">lwd =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="fu">aes</span>(time, surv.pap), <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_clean</span>()<span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Time (months) from the start of the FU'</span>, <span class="at">y =</span> <span class="st">'P(T &gt; t)'</span>, <span class="at">caption =</span> <span class="st">'Tempo mediano calcolato da noi: 25 </span><span class="sc">\n</span><span class="st"> tempo mediano riportato nel paper: 25'</span>)<span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,.<span class="dv">05</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">36</span>,<span class="dv">1</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">36</span>))<span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">23</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">25</span>, <span class="at">xend =</span> <span class="dv">25</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'grey'</span>, <span class="at">linetype =</span> <span class="st">'dashed'</span>)<span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">25</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)<span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="fl">0.50</span>, <span class="at">x =</span> <span class="dv">25</span>, <span class="at">xend =</span> <span class="dv">25</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">col =</span>  <span class="st">'#F8766D'</span>, <span class="at">linetype =</span> <span class="st">'dotted'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Survival_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>Potremmo fare la stessa cosa per il gruppo placebo. Chiaramente, il tempo mediano di follow-up può e deve essere calcolato in modo tale che comprenda entrambi i bracci di trattamento. Però farlo separatamente potrebbe riportare informazioni utili. Perchè secondo voi?</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
